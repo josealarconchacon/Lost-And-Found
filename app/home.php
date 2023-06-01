@@ -1,0 +1,244 @@
+<?php
+    // Initialize the session
+    session_start();
+ 
+    // Check if the user is logged in, if not then redirect him to login page
+    if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+        header("location: login.php");
+        exit;
+    } 
+
+    include_once '../configuration/config.php';
+    
+    if($_SERVER['REQUEST_METHOD'] == "POST") {
+        $description = $_POST['item_description'];
+        $location = $_POST['item_location'];
+        $category = $_POST['item_category'];
+        $userId = create_id();
+        $itemId = create_id();
+    
+        do {
+            // Check for empty fields
+            if(empty($description) || empty($location) || empty($category)) {
+                $error = "All fields are required.";
+                break;
+            }
+            // Insert Data to DB
+            $stmt = $conn->prepare("INSERT INTO lostItem (user_id, item_id, item_description, item_location, item_category) VALUES (?,?,?,?,?)");
+            $stmt->bind_param("sssss", $userId, $itemId, $description, $location, $category);
+            $stmt->execute();
+            $stmt->close();
+            // Redirect to home page
+            header("location: home.php");
+        }while(false);
+    }
+    function create_id() {
+        $random_length = rand(4,19);
+        $number = "";
+        for($i = 1; $i < $random_length; $i += 1) {
+            $new_random = rand(0, 9);
+            $number = $number . $new_random;
+        }
+        return $number;
+    }
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap  -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="/public/css/style.css">
+    <title>Lost And Found</title>
+</head>
+
+<body>
+    <div class="mainContainer container">
+        <!-- header  -->
+        <div class="item header">
+            <nav class="navbar navbar-light">
+                <a class="navbar-brand fs-6">
+                    <img src="/public/img/logo.png" width="60px" height="40px" id=logo alt="Logo image"
+                        style="margin-left: 10px;" /></a>
+                <h1 class="welcome">Welcome to Lost & Found, <?php echo $_SESSION["username"]?>
+                </h1>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a href="reset-password.php" class="dropdown-item">Reset Password</a></li>
+                        <li><a href="logout.php" class="dropdown-item" type="button">Log Out</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Filter  -->
+        <div class="item sidebar">
+            <button type="button" class="btn btn-circle" data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop">+</button>
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="home.php" method="post">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Share what you have found</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-4">
+                                    <label for="item_description" class="form-label">Item Description</label>
+                                    <input type="text" class="form-control" id="item_description"
+                                        name="item_description" placeholder="Enter Item Description...">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="item_location">Where the Item was found</label>
+                                    <select class="form-select" id="item_location" name="item_location">
+                                        <option selected>Select</option>
+                                        <option value="C">C Building</option>
+                                        <option value="B">B Building</option>
+                                        <option value="E">E Building</option>
+                                        <option value="M">M Building</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="item_category">Category</label>
+                                    <select class="form-select" id="item_category" name="item_category">
+                                        <option selected>Select</option>
+                                        <option value="Clothing">Clothing</option>
+                                        <option value="Books">Books</option>
+                                        <option value="Electronics">Electronics</option>
+                                        <option value="Others">Others</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" name="submit" class="btn btn-primary" value="Share Item" />
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <h1>Filter</h1>
+            <br>
+            <h3>Building</h3>
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="navbar-nav">
+                            <br>
+                            <form action="">
+                                <div class="radio-toolbar">
+                                    <input type="radio" id="radio1" name="radios" value="false" checked>
+                                    <label for="radio1">C</label>
+                                    <input type="radio" id="radio2" name="radios" value="false">
+                                    <label for="radio2">B</label>
+                                    <input type="radio" id="radio3" name="radios" value="true">
+                                    <label for="radio3">E</label>
+                                    <input type="radio" id="radio4" name="radios" value="true">
+                                    <label for="radio4">M</label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <br>
+            <h3>Category</h3>
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <div data-check-all-container>
+                            <br>
+                            <form action="">
+                                <label for="clothing">
+                                    <input type="checkbox" id="clothing" name="clothing">
+                                    Clothing
+                                </label><br>
+                                <label for="books">
+                                    <input type="checkbox" id="books" name="books">
+                                    Books
+                                </label><br>
+                                <label for="electronics">
+                                    <input type="checkbox" id="electronics" name="electronics">
+                                    Electronics
+                                </label><br>
+                                <label for="keys">
+                                    <input type="checkbox" id="keys" name="keys">
+                                    Keys
+                                </label><br>
+                                <label for="others">
+                                    <input type="checkbox" id="others" name="others">
+                                    Others
+                                </label><br>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <br>
+            <button type="button" class="btn rounded-pill btn-md btn-outline-secondary">Apply Filter</button>
+        </div>
+        <div class="item main h-1 p-1">
+            <?php
+             $username = $_SESSION['username'];
+             $query = "SELECT * FROM lostItem";
+             $result = mysqli_query($conn, $query);
+             if(!$result) {
+                die("Query failed: " . mysqli_error($conn));
+            }
+            while($row = $result->fetch_assoc()) {
+                echo "
+                <div class='card shadow p-2 mb-3 bg-body rounded'>
+                <h5 class='card-header'>User</h5>
+                <div class='card-body'>
+                    <p class='card-text'>". $row['item_description'] ."</p>
+                    <p>"."<strong>Location</strong>:  &nbsp;" .$row['item_location']. " Building  &nbsp;" . "  &nbsp;<strong>Category</strong>:  &nbsp;" .$row['item_category']. "</p>
+                    <a href='#'>
+                        <i class='bi bi-suit-heart' style='color: black;'></i>
+                        <label style='color: black;'>0</label>
+                    </a>
+                    <a href='#'>
+                        <i class ='bi bi-chat-left-quote' style='color: black;'></i>
+                        <label style='color: black;'>1 comment</label>
+                    </a>
+                </div>
+            </div>
+                ";
+            }
+            ?>
+        </div>
+        <div class="item footer">footer</div>
+    </div>
+</body>
+
+</html>
