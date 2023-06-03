@@ -14,7 +14,7 @@
         $description = $_POST['item_description'];
         $location = $_POST['item_location'];
         $category = $_POST['item_category'];
-        $userId = create_id();
+        $userId = get_user_id_from_session();
         $itemId = create_id();
     
         do {
@@ -31,6 +31,10 @@
             // Redirect to home page
             header("location: home.php");
         }while(false);
+    }
+
+    function get_user_id_from_session() {
+        return $_SESSION["id"];
     }
     function create_id() {
         $random_length = rand(4,19);
@@ -109,20 +113,20 @@
                                     <label for="item_location">Where the Item was found</label>
                                     <select class="form-select" id="item_location" name="item_location">
                                         <option selected>Select</option>
-                                        <option value="C">C Building</option>
-                                        <option value="B">B Building</option>
-                                        <option value="E">E Building</option>
-                                        <option value="M">M Building</option>
+                                        <option name="building[]" value="C">C Building</option>
+                                        <option name="building[]" value="B">B Building</option>
+                                        <option name="building[]" value="E">E Building</option>
+                                        <option name="building[]" value="M">M Building</option>
                                     </select>
                                 </div>
                                 <div class="mb-4">
                                     <label for="item_category">Category</label>
                                     <select class="form-select" id="item_category" name="item_category">
                                         <option selected>Select</option>
-                                        <option value="Clothing">Clothing</option>
-                                        <option value="Books">Books</option>
-                                        <option value="Electronics">Electronics</option>
-                                        <option value="Others">Others</option>
+                                        <option value="Clothing" name="categories[]">Clothing</option>
+                                        <option value="Books" name="categories[]">Books</option>
+                                        <option value="Electronics" name="categories[]">Electronics</option>
+                                        <option value="Others" name="categories[]">Others</option>
                                     </select>
                                 </div>
 
@@ -139,6 +143,10 @@
             <br>
             <br>
             <h1>Filter</h1>
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
+                title="Type in a name">
+            <br>
+
             <br>
             <h3>Building</h3>
             <nav class="navbar navbar-expand-lg navbar-light">
@@ -151,15 +159,15 @@
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div class="navbar-nav">
                             <br>
-                            <form action="">
+                            <form action="filter.php" id="selection" method="get">
                                 <div class="radio-toolbar">
-                                    <input type="radio" id="radio1" name="radios" value="false" checked>
+                                    <input type="radio" id="radio1" name="filterLocation[]" value="false" checked>
                                     <label for="radio1">C</label>
-                                    <input type="radio" id="radio2" name="radios" value="false">
+                                    <input type="radio" id="radio2" name="filterLocation[]" value="false">
                                     <label for="radio2">B</label>
-                                    <input type="radio" id="radio3" name="radios" value="true">
+                                    <input type="radio" id="radio3" name="filterLocation[]" value="true">
                                     <label for="radio3">E</label>
-                                    <input type="radio" id="radio4" name="radios" value="true">
+                                    <input type="radio" id="radio4" name="filterLocation[]" value="true">
                                     <label for="radio4">M</label>
                                 </div>
                             </form>
@@ -179,66 +187,87 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <div data-check-all-container>
                             <br>
-                            <form action="">
+                            <form action="filter.php" class="selection" method="post">
                                 <label for="clothing">
-                                    <input type="checkbox" id="clothing" name="clothing">
+                                    <input type="checkbox" id="clothing" name="filterCategory[]" value="Clothing" cla>
                                     Clothing
                                 </label><br>
                                 <label for="books">
-                                    <input type="checkbox" id="books" name="books">
+                                    <input type="checkbox" id="books" name="filterCategory[]" value="Books" cla>
                                     Books
                                 </label><br>
                                 <label for="electronics">
-                                    <input type="checkbox" id="electronics" name="electronics">
+                                    <input type="checkbox" id="electronics" name="filterCategory[]" value="Electronics"
+                                        cla>
                                     Electronics
                                 </label><br>
                                 <label for="keys">
-                                    <input type="checkbox" id="keys" name="keys">
+                                    <input type="checkbox" id="keys" name="filterCategory[]" value="Keys" cla>
                                     Keys
                                 </label><br>
                                 <label for="others">
-                                    <input type="checkbox" id="others" name="others">
+                                    <input type="checkbox" id="others" name="filterCategory[]" value="Others" cla>
                                     Others
                                 </label><br>
+                                <input type="submit" value="Apply">
                             </form>
                         </div>
                     </div>
                 </div>
             </nav>
+
             <br>
-            <button type="button" class="btn rounded-pill btn-md btn-outline-secondary">Apply Filter</button>
+            <button type="submit" id="filter-btn" class="btn rounded-pill btn-md btn-outline-secondary">Apply
+                Filter</button>
         </div>
+
         <div class="item main h-1 p-1">
             <?php
-             $username = $_SESSION['username'];
-             $query = "SELECT * FROM lostItem";
+            //  $query = "select * from lostItem as li left join users as u on li.user_id = u.id";
+            if(isset($_POST['filterCategory'])) {
+                $my_filter = $_POST['filterCategory'];
+                $query = "select * from lostItem as li left join users as u on li.user_id = u.id WHERE item_category = '" . $my_filter. "'";
+            } else {
+                $query = "select * from lostItem as li left join users as u on li.user_id = u.id";
+            }
+            
              $result = mysqli_query($conn, $query);
+
              if(!$result) {
                 die("Query failed: " . mysqli_error($conn));
-            }
-            while($row = $result->fetch_assoc()) {
-                echo "
-                <div class='card shadow p-2 mb-3 bg-body rounded'>
-                <h5 class='card-header'>User</h5>
-                <div class='card-body'>
-                    <p class='card-text'>". $row['item_description'] ."</p>
-                    <p>"."<strong>Location</strong>:  &nbsp;" .$row['item_location']. " Building  &nbsp;" . "  &nbsp;<strong>Category</strong>:  &nbsp;" .$row['item_category']. "</p>
-                    <a href='#'>
-                        <i class='bi bi-suit-heart' style='color: black;'></i>
-                        <label style='color: black;'>0</label>
-                    </a>
-                    <a href='#'>
-                        <i class ='bi bi-chat-left-quote' style='color: black;'></i>
-                        <label style='color: black;'>1 comment</label>
-                    </a>
+            };
+            // $my_filter = "Books"; // $my_filter = $_POST['filterCategory']
+            // $query = "select * from lostItem as li left join users as u on li.user_id = u.id WHERE item_category = '" . $my_filter. "'";
+
+
+            // Execute the query
+            $result = $conn->query($query);
+            // Loop through the results and display them in Bootstrap 5 cards
+                while($row = $result->fetch_assoc()) {
+                    echo "
+                    <div class='card shadow p-2 mb-3 bg-body rounded'> 
+                    <h5 class='card-header'>".$row['username']."</h5>
+                    <div class='card-body'>
+                        <p class='card-text'>". $row['item_description'] ."</p>
+                        <p>"."<strong>Location</strong>:  &nbsp;" .$row['item_location']. " Building  &nbsp;" . "  &nbsp;<strong>Category</strong>:  &nbsp;" .$row['item_category']. "</p>
+                        <a href='#'>
+                            <i class='bi bi-suit-heart' style='color: black;'></i>
+                            <label style='color: black;'>0</label>
+                        </a>
+                        <a href='#'>
+                            <i class ='bi bi-chat-left-quote' style='color: black;'></i>
+                            <label style='color: black;'>1 comment</label>
+                        </a>
+                    </div>
                 </div>
-            </div>
-                ";
+                    ";   
             }
             ?>
         </div>
         <div class="item footer">footer</div>
     </div>
+    <script src="../public//js/script.js">
+    </script>
 </body>
 
 </html>
