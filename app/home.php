@@ -75,7 +75,7 @@
                     <a href="javascript:void(0)" id="toggler-btn-close" class="closebtn"
                         onclick="closeNav()">&times;</a>
                     <a href="#">About</a>
-                    <a href="#">Services</a>
+                    <a href="post.php">My Posts</a>
                     <a href="reset-password.php">Reset Password</a>
                     <a href="logout.php">Log Out</a>
                 </div>
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="mb-4">
                                     <label for="item_location">Where the Item was found</label>
-                                    <select class="form-select" id="item_location" name="item_location">
+                                    <select class="form-select" id="item_location" name="item_location" required>
                                         <option selected>Select</option>
                                         <option name="building[]" value="C">C Building</option>
                                         <option name="building[]" value="B">B Building</option>
@@ -122,7 +122,7 @@
                                 </div>
                                 <div class="mb-4">
                                     <label for="item_category">Category</label>
-                                    <select class="form-select" id="item_category" name="item_category">
+                                    <select class="form-select" id="item_category" name="item_category" required>
                                         <option selected>Select</option>
                                         <option value="Clothing" name="categories[]">Clothing</option>
                                         <option value="Books" name="categories[]">Books</option>
@@ -144,8 +144,6 @@
             <br>
             <br>
             <h1>Filter</h1>
-            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
-                title="Type in a name">
             <br>
 
             <br>
@@ -264,7 +262,6 @@
             }
             ?>
         </div>
-        <div class="item footer">footer</div>
     </div>
     <script src="../public/js/script.js">
     </script>
