@@ -65,17 +65,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
-        // Create user_id my php
-        $user_id = create_user_id();
         // Prepare an insert statement
-        $sql = "INSERT INTO users (user_id, username, password) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
          
         if($stmt = mysqli_prepare($conn, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sss", $param_user_id, $param_username, $param_password);
+            mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
             
             // Set parameters
-            $param_user_id = $user_id;
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             
