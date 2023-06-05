@@ -209,26 +209,25 @@
                                     <input type="checkbox" id="others" name="filterCategory[]" value="Others" cla>
                                     Others
                                 </label><br>
-                                <input type="submit" value="Apply">
+                                <br>
+                                <input class="btn-submit" type="submit" name="submit" value="Apply Filter">
                             </form>
                         </div>
                     </div>
                 </div>
             </nav>
-
             <br>
-            <button type="submit" id="filter-btn" class="btn rounded-pill btn-md btn-outline-secondary">Apply
-                Filter</button>
         </div>
 
         <div class="item main h-1 p-1">
             <?php
+            // Test
             //  $query = "select * from lostItem as li left join users as u on li.user_id = u.id";
             if(isset($_POST['filterCategory'])) {
                 $my_filter = $_POST['filterCategory'];
                 $query = "select * from lostItem as li left join users as u on li.user_id = u.id WHERE item_category = '" . $my_filter. "'";
             } else {
-                $query = "select * from lostItem as li left join users as u on li.user_id = u.id";
+                $query = "select * from lostItem as li left join users as u on li.user_id = u.id ORDER BY li.id DESC";
             }
             
              $result = mysqli_query($conn, $query);
@@ -236,9 +235,9 @@
              if(!$result) {
                 die("Query failed: " . mysqli_error($conn));
             };
+            // Test
             // $my_filter = "Books"; // $my_filter = $_POST['filterCategory']
             // $query = "select * from lostItem as li left join users as u on li.user_id = u.id WHERE item_category = '" . $my_filter. "'";
-
 
             // Execute the query
             $result = $conn->query($query);
