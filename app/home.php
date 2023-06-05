@@ -66,25 +66,26 @@
 </head>
 
 <body>
+
     <div class="mainContainer container">
         <!-- header  -->
         <div class="item header">
             <nav class="navbar navbar-light">
-                <a class="navbar-brand fs-6">
-                    <img src="/public/img/logo.png" width="60px" height="40px" id=logo alt="Logo image"
-                        style="margin-left: 10px;" /></a>
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" id="toggler-btn-close" class="closebtn"
+                        onclick="closeNav()">&times;</a>
+                    <a href="#">About</a>
+                    <a href="#">Services</a>
+                    <a href="reset-password.php">Reset Password</a>
+                    <a href="logout.php">Log Out</a>
+                </div>
+                <div id="main">
+                    <span style="font-size:30px;cursor:pointer" id="toggler-btn" onclick="openNav()">&#9776;</span>
+                </div>
                 <h1 class="welcome">Welcome to Lost & Found, <?php echo $_SESSION["username"]?>
                 </h1>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="bi bi-person-circle"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a href="reset-password.php" class="dropdown-item">Reset Password</a></li>
-                        <li><a href="logout.php" class="dropdown-item" type="button">Log Out</a></li>
-                    </ul>
-                </div>
+                <a class="navbar-brand fs-6">
+                    <img src="/public/img/logo.png" width="60px" height="40px" id=logo alt="Logo image" /></a>
             </nav>
         </div>
 
@@ -265,7 +266,7 @@
         </div>
         <div class="item footer">footer</div>
     </div>
-    <script src="../public//js/script.js">
+    <script src="../public/js/script.js">
     </script>
 </body>
 
