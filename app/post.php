@@ -74,7 +74,7 @@ session_start();
                         </a>
                         <br>
                         <br>
-                        <a class='btn btn-outline-danger' href='delete.php?id=$row[item_id]'>Delete Post</a>
+                        <a class='btn btn-outline-danger' href='delete.php?deleteId=".$row['item_id']."'>Delete Post</a>
                       </div>
                     </div>
                   </div>
