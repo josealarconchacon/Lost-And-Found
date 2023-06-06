@@ -74,7 +74,7 @@
                 <div id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" id="toggler-btn-close" class="closebtn"
                         onclick="closeNav()">&times;</a>
-                    <a href="#">About</a>
+                    <a href="about.html">About</a>
                     <a href="post.php">My Posts</a>
                     <a href="reset-password.php">Reset Password</a>
                     <a href="logout.php">Log Out</a>
