@@ -9,6 +9,13 @@ body {
   padding: 30px;
   max-width: 1500px;
 }
+.card-body,
+a,
+i,
+label {
+  color: #333;
+  text-decoration: none;
+}
 
 /* Filter PHP */
 .back-home h1 {
