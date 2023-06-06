@@ -43,6 +43,7 @@
                         $query = "select * from lostItem as li left join users as u on li.user_id = u.id ORDER BY li.id DESC";
                         // print($query);
                     }
+
                     // connection init
                     $result = mysqli_query($conn, $query);
                     // run query
@@ -80,6 +81,20 @@
                             $is_first = false;          
                         } else {
                             $where_clause = $where_clause. " OR item_category = '" . $category . "'";
+                        }
+                    }
+                    return $where_clause;
+                }
+                
+                function get_where_clause_location($filter_location) {
+                    $where_clause = "";
+                    $is_first = true;
+                    foreach($filter_location as $location) {
+                        if ($is_first) {
+                            $where_clause = $where_clause . " item_location = '" . $location . "'";
+                            $is_first = false;
+                        } else {
+                            $where_clause = $where_clause. " OR item_location = '" . $location . "'";
                         }
                     }
                     return $where_clause;
