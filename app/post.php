@@ -74,6 +74,8 @@ session_start();
                         </a>
                         <br>
                         <br>
+                    
+                        <a class='btn btn-info' data-bs-toggle='modal' data-bs-target='#staticBackdrop''>Update Post</a>
                         <a class='btn btn-outline-danger' href='delete.php?deleteId=".$row['item_id']."'>Delete Post</a>
                       </div>
                     </div>
