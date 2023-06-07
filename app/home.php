@@ -76,6 +76,7 @@
                         onclick="closeNav()">&times;</a>
                     <a href="about.html">About</a>
                     <a href="post.php">My Posts</a>
+                    <a href="feedback.php">Send Us Your Feedback</a>
                     <a href="reset-password.php">Reset Password</a>
                     <a href="logout.php">Log Out</a>
                 </div>
@@ -84,7 +85,7 @@
                 </div>
                 <h1 class="welcome">Welcome to Lost & Found, <?php echo $_SESSION["username"]?>
                 </h1>
-                <a class="navbar-brand fs-6">
+                <a class="navbar-brand fs-3">
                     <img src="/public/img/logo.png" width="60px" height="40px" id=logo alt="Logo image" /></a>
             </nav>
         </div>
@@ -263,6 +264,7 @@
             ?>
         </div>
     </div>
+
     <script src="../public/js/script.js">
     </script>
 </body>
