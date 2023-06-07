@@ -1,0 +1,72 @@
+.title-txt h1 {
+  font-size: 26px;
+}
+.title-txt p {
+  font-size: 16px;
+  color: rgb(122, 122, 123);
+}
+form {
+  max-width: 420px;
+  margin: 50px auto;
+}
+
+.feedback-input {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  line-height: 22px;
+  border: 0.5px solid #008080;
+  border-radius: 5px;
+  transition: all 0.3s;
+  padding: 13px;
+  margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.feedback-input:focus {
+  border: 2px solid #008080;
+}
+
+textarea {
+  height: 150px;
+  line-height: 150%;
+  resize: vertical;
+}
+
+[type="submit"] {
+  font-family: "Montserrat", Arial, Helvetica, sans-serif;
+  width: 100%;
+  background: #fff;
+  color: black;
+  border: 1px solid #008080;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 22px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  transition: all 0.3s;
+  font-weight: 700;
+}
+
+[type="submit"]:hover {
+  background: #008080;
+  color: #fff;
+}
+
+.success {
+  background: #66cdaa;
+  padding: 15px 10px 15px;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.error {
+  background: #b60101;
+  padding: 15px 10px 15px;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  margin-top: 10px;
+}
